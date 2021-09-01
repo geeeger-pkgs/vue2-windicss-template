@@ -80,7 +80,6 @@ h5-imevos
 │  │  ├─ index         // 示例页面
 │  └─ utils
 │     ├─ audio.js      // 播放管理器，提供全局调用封装
-│     ├─ audioHelper.js// 筛选章节数据的一些函数
 │     ├─ axios.js      // 服务的基础封装，包括了权限验证等截断器
 │     ├─ bus.js        // 全局事件总线
 │     ├─ calculate.js  // 浮点数计算辅助函数（未使用）
@@ -89,10 +88,7 @@ h5-imevos
 │     │  ├─ number.js
 │     │  └─ string.js
 │     ├─ gen-url.js    // url生成辅助函数
-│     ├─ getTryFlag.js // 查询课程是否有试听章节辅助函数
 │     ├─ history.js    // 历史管理器
-│     ├─ initUserInfo.js // 使用了缓存的个人信息请求辅助函数
-│     ├─ login.js      // 登录跳转行为函数
 │     ├─ lru.js        // lru
 │     ├─ painter.js    // canvas绘图工具
 │     ├─ phone.js      // 电话号处理函数（未使用）
