@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <img src="./logo.jpg" style="position:absolute; top:0; left:0;  width: 80%; z-index:-1;opacity: 0; ">
+    <h1 style="display: none;"></h1>
+    <p style="display: none;"></p>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="super-pop-container" style="position: relative; z-index: 15000;"></div>
+    <div id="app"></div>
+    <% for (let i in htmlWebpackPlugin.options.cdn) { %>
+    <script type="text/javascript" src="<%= htmlWebpackPlugin.options.cdn[i] %>"></script>
+    <% } %>
+    <script type="text/javascript" src="//res2.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

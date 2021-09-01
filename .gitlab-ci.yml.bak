@@ -1,0 +1,75 @@
+# GitLab CI/CD Front End Angular Continuous Integration Practice : https://github.com/giscafer/front-end-manual/issues/27
+# Because sharing Runner, the same version number is not recommended here. When running at the same time, the same docker image will be faulty.
+image: node:14.17.3
+
+# Variable definitions
+# https://docs.gitlab.com/ee/ci/variables/#using-predefined-environment-variables
+variables:
+  CURRENT_BRANCH: $CI_COMMIT_REF_NAME
+
+# cache directory file
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - init
+  - build
+  - deploy
+
+install_packages:
+  stage: init
+  cache:
+    paths:
+      - node_modules/
+  script:
+    # Print what branch is currently
+    - echo "CURRENT_BRANCH=$CURRENT_BRANCH"
+    # Install all dependencies, ie node_modules
+    - npm install
+  only:
+    - test
+    - prod
+
+build:
+  stage: build
+  cache:
+    policy: pull
+    paths:
+      - node_modules/
+  script:
+      - npm run build$CI_COMMIT_REF_NAME
+  # artifacets is to package the file or folder you specified, and then you can download it from the gitlab page.
+  artifacts:
+    # artifacets's name
+    name: '$CI_COMMIT_REF_NAME-dist'
+    # artifacets expiration time, because the data is directly saved on the Gitlab machine, too long resources can be deleted
+    expire_in: 60 mins
+    # Make a directory that needs to be packaged, here I package the dist directory, ready to publish to the server
+    paths:
+      - dist
+  only:
+    - test
+    - prod
+
+# Deployment Tasks
+deploy:
+  stage: deploy
+# This command specifies that only the master branch can execute the current task.
+  only:
+    - test
+    - prod
+# Deploy the script. In the code below, I used a lot of variables like ${AMAZON_PEM}. Since our private key and Ip are not suitable for public display,
+# So I used Gitlab's variable tool. In repo's Setting > CI/CD > Secret variables, these variable values ​​are only accessible to project administrators.
+  script:
+    - ls -la
+    - apt-get update
+    - apt-get install sshpass
+    - mkdir ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - sshpass -p $SERVER_SEC scp -r dist/* root@$SERVER_IP:/opt/web/$CI_COMMIT_REF_NAME
+    # - sshpass -p $SERVER_SEC scp -r nginx/* root@$SERVER_IP:/opt/web/nginx
+    # - 'echo "${AMAZON_PEM}" > amazon.pem'
+    # - 'chmod 600 amazon.pem'
+    # - 'scp -o StrictHostKeyChecking=no -i amazon.pem -r dist/* ${AMAZON_NAME_IP}:/usr/share/nginx/html/'
